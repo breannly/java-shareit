@@ -2,12 +2,11 @@ package ru.practicum.shareit.user.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import ru.practicum.shareit.entity.GeneratorId;
-import ru.practicum.shareit.entity.ValidateService;
+import ru.practicum.shareit.exception.model.ObjectNotFoundException;
 import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.dto.UserMapper;
 import ru.practicum.shareit.user.model.User;
-import ru.practicum.shareit.user.repo.UserRepo;
+import ru.practicum.shareit.user.repo.UserRepository;
 
 import java.util.List;
 
@@ -17,43 +16,49 @@ import static java.util.stream.Collectors.toList;
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
-    private final UserRepo userRepo;
-    private final UserMapper userMapper;
-    private final GeneratorId generatorId;
-    private final ValidateService validateService;
+    private final UserRepository userRepository;
 
     @Override
     public List<UserDto> getAll() {
-        return userRepo.getAll().stream()
-                .map(userMapper::toDto)
+        return userRepository.findAll().stream()
+                .map(UserMapper::toDto)
                 .collect(toList());
     }
 
     @Override
     public UserDto save(UserDto userDto) {
-        User user = userMapper.toUser(userDto);
-        validateService.checkEmailExists(user.getEmail());
-        user.setId(generatorId.generate());
-        return userMapper.toDto(userRepo.save(user));
+        User user = UserMapper.toUser(userDto);
+        return UserMapper.toDto(userRepository.save(user));
     }
 
     @Override
     public UserDto update(Long userId, UserDto userDto) {
-        User user = userMapper.toUser(userDto);
-        validateService.checkUserExists(userId);
-        if (user.getEmail() != null) {
-            validateService.checkEmailExists(user.getEmail());
+        User updatedUser = userRepository.findById(userId).orElseThrow(() ->
+                new ObjectNotFoundException("User doesn't exists"));
+        fillUser(updatedUser, userDto);
+        return UserMapper.toDto(userRepository.save(updatedUser));
+    }
+
+    private void fillUser(User user, UserDto userDto) {
+        String name = userDto.getName();
+        if (name != null) {
+            user.setName(name);
         }
-        return userMapper.toDto(userRepo.update(userId, user));
+        String email = userDto.getEmail();
+        if (email != null) {
+            user.setEmail(email);
+        }
     }
 
     @Override
     public UserDto getById(Long userId) {
-        return userMapper.toDto(userRepo.getById(userId));
+        User user = userRepository.findById(userId).orElseThrow(() ->
+                new ObjectNotFoundException("User doesn't exists"));
+        return UserMapper.toDto(user);
     }
 
     @Override
     public void delete(Long userId) {
-        userRepo.delete(userId);
+        userRepository.deleteById(userId);
     }
 }
