@@ -16,10 +16,8 @@ public class ItemMapper {
         return itemDto;
     }
 
-    public Item toItem(Long itemId, Long ownerId, ItemDto itemDto) {
+    public Item toItem(ItemDto itemDto) {
         Item item = new Item();
-        item.setId(itemId);
-        item.setOwnerId(ownerId);
         item.setName(itemDto.getName());
         item.setAvailable(itemDto.getAvailable());
         item.setDescription(itemDto.getDescription());
