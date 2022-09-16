@@ -1,12 +1,11 @@
-package ru.practicum.shareit.booking.controller;
+package ru.practicum.shareit.booking;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.booking.dto.BookingDto;
 import ru.practicum.shareit.booking.dto.BookingInfoDto;
-import ru.practicum.shareit.booking.service.BookingService;
-import ru.practicum.shareit.entity.Create;
+import ru.practicum.shareit.annotation.Create;
 
 import java.util.List;
 

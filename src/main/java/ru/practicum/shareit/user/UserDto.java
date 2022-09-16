@@ -1,11 +1,11 @@
-package ru.practicum.shareit.user.dto;
+package ru.practicum.shareit.user;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import ru.practicum.shareit.entity.Create;
-import ru.practicum.shareit.entity.Update;
+import ru.practicum.shareit.annotation.Create;
+import ru.practicum.shareit.annotation.Update;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;

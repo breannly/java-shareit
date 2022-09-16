@@ -1,12 +1,9 @@
-package ru.practicum.shareit.user.service;
+package ru.practicum.shareit.user;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.exception.model.ObjectNotFoundException;
-import ru.practicum.shareit.user.dto.UserDto;
-import ru.practicum.shareit.user.dto.UserMapper;
-import ru.practicum.shareit.user.model.User;
-import ru.practicum.shareit.user.repo.UserRepository;
+import ru.practicum.shareit.user.*;
 
 import java.util.List;
 
