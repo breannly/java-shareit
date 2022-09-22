@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface ItemService {
 
-    List<ItemInfoDto> getAllById(Long userId);
+    List<ItemInfoDto> getAllById(Long userId, int from, int size);
 
     ItemDto save(Long userId, ItemDto itemDto);
 
@@ -19,5 +19,5 @@ public interface ItemService {
 
     ItemInfoDto getById(Long itemId, Long userId);
 
-    List<ItemDto> search(String text, Long userId);
+    List<ItemDto> search(String text, Long userId, int from, int size);
 }
