@@ -1,11 +1,13 @@
 package ru.practicum.shareit.item;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.booking.BookingRepository;
-import ru.practicum.shareit.exception.model.ObjectNotFoundException;
-import ru.practicum.shareit.exception.model.ValidationException;
+import ru.practicum.shareit.exception.ObjectNotFoundException;
+import ru.practicum.shareit.exception.ValidationException;
 import ru.practicum.shareit.item.dto.*;
 import ru.practicum.shareit.item.mapper.CommentMapper;
 import ru.practicum.shareit.item.mapper.ItemMapper;
@@ -13,6 +15,8 @@ import ru.practicum.shareit.item.model.Comment;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.repo.CommentRepository;
 import ru.practicum.shareit.item.repo.ItemRepository;
+import ru.practicum.shareit.request.ItemRequest;
+import ru.practicum.shareit.request.ItemRequestRepository;
 import ru.practicum.shareit.user.User;
 import ru.practicum.shareit.user.UserRepository;
 
@@ -29,10 +33,13 @@ public class ItemServiceImpl implements ItemService {
     private final UserRepository userRepository;
     private final BookingRepository bookingRepository;
     private final CommentRepository commentRepository;
+    private final ItemRequestRepository itemRequestRepository;
 
     @Override
-    public List<ItemInfoDto> getAllById(Long userId) {
-        return itemRepository.findAllById(userId).stream()
+    public List<ItemInfoDto> getAllById(Long userId, int from, int size) {
+        Pageable pageable = PageRequest.of(from / size, size);
+        return itemRepository.findAllById(userId, pageable)
+                .stream()
                 .map(item -> ItemMapper.toItemInfoDto(
                         item,
                         bookingRepository.findLastBooking(LocalDateTime.now(), userId, item.getId()),
@@ -44,9 +51,14 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public ItemDto save(Long userId, ItemDto itemDto) {
-        Item item = ItemMapper.toItem(itemDto);
-        item.setOwner(userRepository.findById(userId).orElseThrow(()
-                -> new ObjectNotFoundException("User doesn't exists")));
+        User user = userRepository.findById(userId).orElseThrow(()
+                -> new ObjectNotFoundException("User not found"));
+        ItemRequest request = null;
+        if (itemDto.getRequestId() != null) {
+            request = itemRequestRepository.findById(itemDto.getRequestId()).orElseThrow(()
+                    -> new ObjectNotFoundException("Request not found"));
+        }
+        Item item = ItemMapper.toItem(itemDto, user, request);
         return ItemMapper.toDto(itemRepository.save(item));
     }
 
@@ -57,7 +69,7 @@ public class ItemServiceImpl implements ItemService {
         Item item = itemRepository.findById(itemId).orElseThrow(()
                 -> new ObjectNotFoundException("Item doesn't exists"));
         if (!bookingRepository.existsBookingByItemIdAndBookerIdAndEndBefore(itemId, userId, LocalDateTime.now())) {
-            throw new ValidationException("The user has not used this item yet");
+            throw new ValidationException("Validation Failed");
         }
         Comment comment = CommentMapper.mapToComment(commentDto, user, item);
         return CommentMapper.mapToCommentInfoDto(commentRepository.save(comment));
@@ -65,7 +77,8 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public ItemDto update(Long userId, Long itemId, ItemDto itemDto) {
-        checkUserExists(userId);
+        userRepository.findById(userId).orElseThrow(()
+                -> new ObjectNotFoundException("User not found"));
         Item updatedItem = itemRepository.findById(itemId).orElseThrow(()
                 -> new ObjectNotFoundException("Item doesn't exists"));
         checkItemOwner(updatedItem.getOwner().getId(), userId);
@@ -96,7 +109,8 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public ItemInfoDto getById(Long itemId, Long userId) {
-        checkUserExists(userId);
+        userRepository.findById(userId).orElseThrow(()
+                -> new ObjectNotFoundException("User not found"));
         Item item = itemRepository.findById(itemId).orElseThrow(()
                 -> new ObjectNotFoundException("Item doesn't exists"));
         Booking lastBooking = bookingRepository.findLastBooking(LocalDateTime.now(), userId, itemId);
@@ -106,21 +120,17 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public List<ItemDto> search(String text, Long userId) {
-        checkUserExists(userId);
+    public List<ItemDto> search(String text, Long userId, int from, int size) {
+        userRepository.findById(userId).orElseThrow(()
+                -> new ObjectNotFoundException("User not found"));
+        Pageable pageable = PageRequest.of(from / size, size);
         if (text.isBlank()) {
             return new ArrayList<>();
         } else {
             text = text.toLowerCase();
-            return itemRepository.searchByKeyword(text).stream()
+            return itemRepository.searchByKeyword(text, pageable).stream()
                     .map(ItemMapper::toDto)
                     .collect(Collectors.toList());
-        }
-    }
-
-    private void checkUserExists(Long userId) {
-        if (!userRepository.existsById(userId)) {
-            throw new ObjectNotFoundException("User doesn't exists");
         }
     }
 }

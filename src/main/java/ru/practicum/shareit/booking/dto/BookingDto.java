@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import ru.practicum.shareit.annotation.Create;
+import ru.practicum.shareit.common.Create;
 
 import javax.validation.constraints.FutureOrPresent;
 import javax.validation.constraints.NotNull;

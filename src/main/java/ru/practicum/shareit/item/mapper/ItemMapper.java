@@ -6,6 +6,8 @@ import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.dto.ItemInfoDto;
 import ru.practicum.shareit.item.model.Comment;
 import ru.practicum.shareit.item.model.Item;
+import ru.practicum.shareit.request.ItemRequest;
+import ru.practicum.shareit.user.User;
 
 import java.util.List;
 
@@ -13,13 +15,13 @@ import java.util.List;
 public class ItemMapper {
 
     public static ItemDto toDto(Item item) {
-        ItemDto itemDto = new ItemDto();
-        itemDto.setId(item.getId());
-        itemDto.setName(item.getName());
-        itemDto.setAvailable(item.getAvailable());
-        itemDto.setDescription(item.getDescription());
-
-        return itemDto;
+        return new ItemDto(
+                item.getId(),
+                item.getName(),
+                item.getDescription(),
+                item.getAvailable(),
+                item.getRequest() != null ? item.getRequest().getId() : null
+        );
     }
 
     public static ItemInfoDto toItemInfoDto(Item item,
@@ -37,11 +39,15 @@ public class ItemMapper {
         );
     }
 
-    public static Item toItem(ItemDto itemDto) {
+    public static Item toItem(ItemDto itemDto,
+                              User user,
+                              ItemRequest itemRequest) {
         Item item = new Item();
         item.setName(itemDto.getName());
         item.setAvailable(itemDto.getAvailable());
         item.setDescription(itemDto.getDescription());
+        item.setOwner(user);
+        item.setRequest(itemRequest);
 
         return item;
     }
