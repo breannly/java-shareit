@@ -60,7 +60,7 @@ class ItemServiceImplTest {
         Mockito.when(itemRepository.save(Mockito.any(Item.class)))
                 .thenReturn(item);
 
-        ItemDto foundItem = itemService.save(user.getId(), itemDto);
+        ItemDto foundItem = itemService.saveItem(user.getId(), itemDto);
 
         Assertions.assertNotNull(foundItem);
         Assertions.assertEquals(item.getId(), foundItem.getId());
@@ -78,7 +78,7 @@ class ItemServiceImplTest {
                 .thenReturn(Optional.empty());
 
         Exception exception = Assertions.assertThrows(ObjectNotFoundException.class,
-                () -> itemService.save(1L, itemDto));
+                () -> itemService.saveItem(1L, itemDto));
 
         Assertions.assertEquals("User not found", exception.getMessage());
     }
@@ -101,7 +101,7 @@ class ItemServiceImplTest {
         Mockito.when(itemRepository.save(Mockito.any(Item.class)))
                 .thenReturn(item);
 
-        ItemDto foundItem = itemService.save(user1.getId(), itemDto);
+        ItemDto foundItem = itemService.saveItem(user1.getId(), itemDto);
 
         Assertions.assertNotNull(foundItem);
         Assertions.assertEquals(item.getId(), foundItem.getId());
@@ -123,7 +123,7 @@ class ItemServiceImplTest {
                 .thenReturn(Optional.empty());
 
         Exception exception = Assertions.assertThrows(ObjectNotFoundException.class,
-                () -> itemService.save(1L, itemDto));
+                () -> itemService.saveItem(1L, itemDto));
 
         Assertions.assertEquals("Request not found", exception.getMessage());
     }
@@ -176,7 +176,7 @@ class ItemServiceImplTest {
         Mockito.when(itemRepository.save(Mockito.any(Item.class)))
                 .thenReturn(itemUpdate);
 
-        ItemDto foundItem = itemService.update(user.getId(), item.getId(), itemDto);
+        ItemDto foundItem = itemService.updateItem(user.getId(), item.getId(), itemDto);
 
         Assertions.assertNotNull(foundItem);
         Assertions.assertEquals(item.getId(), foundItem.getId());
@@ -194,7 +194,7 @@ class ItemServiceImplTest {
         Mockito.when(userRepository.findById(Mockito.anyLong()))
                 .thenReturn(Optional.of(user));
 
-        List<ItemDto> results = itemService.search(text, user.getId(), 0, 10);
+        List<ItemDto> results = itemService.searchItems(text, user.getId(), 0, 10);
 
         Assertions.assertEquals(0, results.size());
     }

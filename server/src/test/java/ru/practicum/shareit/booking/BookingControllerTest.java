@@ -44,7 +44,7 @@ class BookingControllerTest {
                 LocalDateTime.now().plusHours(1),
                 LocalDateTime.now().plusHours(1));
 
-        Mockito.when(bookingService.booking(Mockito.any(BookingDto.class), Mockito.anyLong()))
+        Mockito.when(bookingService.bookItem(Mockito.any(BookingDto.class), Mockito.anyLong()))
                 .thenReturn(bookingDto);
 
         mockMvc.perform(post("/bookings")
@@ -66,7 +66,7 @@ class BookingControllerTest {
                 new BookingInfoDto.UserInfoDto(1L),
                 new BookingInfoDto.ItemInfoDto(1L, "test"));
 
-        Mockito.when(bookingService.approve(Mockito.anyLong(), Mockito.anyLong(), Mockito.anyBoolean()))
+        Mockito.when(bookingService.approveBooking(Mockito.anyLong(), Mockito.anyLong(), Mockito.anyBoolean()))
                 .thenReturn(bookingInfoDto);
 
         mockMvc.perform(patch("/bookings/1?approved=true")

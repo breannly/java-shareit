@@ -73,7 +73,7 @@ class ItemRequestControllerTest {
 
         List<ItemRequestInfoDto> requests = List.of(request);
 
-        Mockito.when(itemRequestService.getRequestsByUser(Mockito.any(Long.class)))
+        Mockito.when(itemRequestService.getUserRequests(Mockito.any(Long.class)))
                 .thenReturn(requests);
 
         mockMvc.perform(get("/requests")
@@ -89,7 +89,7 @@ class ItemRequestControllerTest {
                         String.class));
 
         Mockito.verify(itemRequestService, Mockito.times(1))
-                .getRequestsByUser(Mockito.any(Long.class));
+                .getUserRequests(Mockito.any(Long.class));
     }
 
     @Test
@@ -101,7 +101,7 @@ class ItemRequestControllerTest {
                 new ArrayList<>()
         );
 
-        Mockito.when(itemRequestService.getRequestById(Mockito.anyLong(), Mockito.anyLong()))
+        Mockito.when(itemRequestService.getRequest(Mockito.anyLong(), Mockito.anyLong()))
                 .thenReturn(requestInfoDto);
 
         mockMvc.perform(get("/requests/1")
@@ -116,6 +116,6 @@ class ItemRequestControllerTest {
                         String.class));
 
         Mockito.verify(itemRequestService, Mockito.times(1))
-                .getRequestById(Mockito.anyLong(), Mockito.anyLong());
+                .getRequest(Mockito.anyLong(), Mockito.anyLong());
     }
 }

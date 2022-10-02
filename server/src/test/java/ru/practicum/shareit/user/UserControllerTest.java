@@ -35,7 +35,7 @@ class UserControllerTest {
     void getAllUsersTest() throws Exception {
         List<UserDto> users = List.of(UserMapper.mapToUserDto(new User(null, "test", "test@gmail.com")));
 
-        Mockito.when(userService.getAll())
+        Mockito.when(userService.getUsers())
                 .thenReturn(users);
 
         mockMvc.perform(get("/users")
@@ -46,14 +46,14 @@ class UserControllerTest {
                 .andExpect(jsonPath("$", Matchers.hasSize(1)));
 
         Mockito.verify(userService, Mockito.times(1))
-                .getAll();
+                .getUsers();
     }
 
     @Test
     void saveUserTest() throws Exception {
         UserDto userDto = new UserDto(null, "test", "test@gmail.com");
 
-        Mockito.when(userService.save(Mockito.any(UserDto.class)))
+        Mockito.when(userService.saveUser(Mockito.any(UserDto.class)))
                 .thenReturn(userDto);
 
         mockMvc.perform(post("/users")
@@ -66,14 +66,14 @@ class UserControllerTest {
                 .andExpect(jsonPath("$.email", Matchers.is(userDto.getEmail()), String.class));
 
         Mockito.verify(userService, Mockito.times(1))
-                .save(Mockito.any(UserDto.class));
+                .saveUser(Mockito.any(UserDto.class));
     }
 
     @Test
     void updateUserTest() throws Exception {
         UserDto userDto = new UserDto(null, "test", "test@gmail.com");
 
-        Mockito.when(userService.update(Mockito.anyLong(), Mockito.any(UserDto.class)))
+        Mockito.when(userService.updateUser(Mockito.anyLong(), Mockito.any(UserDto.class)))
                 .thenReturn(userDto);
 
         mockMvc.perform(patch("/users/1")
@@ -86,6 +86,6 @@ class UserControllerTest {
                 .andExpect(jsonPath("$.email", Matchers.is(userDto.getEmail()), String.class));
 
         Mockito.verify(userService, Mockito.times(1))
-                .update(Mockito.anyLong(), Mockito.any(UserDto.class));
+                .updateUser(Mockito.anyLong(), Mockito.any(UserDto.class));
     }
 }

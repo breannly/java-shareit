@@ -27,7 +27,7 @@ class UserServiceImplTest {
         Mockito.when(userRepository.save(Mockito.any(User.class)))
                 .thenReturn(user);
 
-        UserDto foundUser = userService.save(userDto);
+        UserDto foundUser = userService.saveUser(userDto);
 
         Assertions.assertNotNull(foundUser);
         Assertions.assertEquals(user.getId(), foundUser.getId());
@@ -47,7 +47,7 @@ class UserServiceImplTest {
         Mockito.when(userRepository.save(Mockito.any(User.class)))
                 .thenReturn(updateUser);
 
-        UserDto foundUser = userService.update(user.getId(), userDto);
+        UserDto foundUser = userService.updateUser(user.getId(), userDto);
 
         Assertions.assertNotNull(foundUser);
         Assertions.assertEquals(updateUser.getId(), foundUser.getId());
@@ -63,7 +63,7 @@ class UserServiceImplTest {
                 .thenReturn(Optional.empty());
 
         Exception exception = Assertions.assertThrows(ObjectNotFoundException.class,
-                () -> userService.update(1L, userDto));
+                () -> userService.updateUser(1L, userDto));
 
         Assertions.assertEquals("User not found", exception.getMessage());
     }
@@ -75,7 +75,7 @@ class UserServiceImplTest {
         Mockito.when(userRepository.findById(Mockito.anyLong()))
                 .thenReturn(Optional.of(user));
 
-        UserDto foundUser = userService.getById(user.getId());
+        UserDto foundUser = userService.getUser(user.getId());
 
         Assertions.assertNotNull(foundUser);
         Assertions.assertEquals(user.getId(), foundUser.getId());
@@ -89,7 +89,7 @@ class UserServiceImplTest {
                 .thenReturn(Optional.empty());
 
         Exception exception = Assertions.assertThrows(ObjectNotFoundException.class,
-                () -> userService.getById(1L));
+                () -> userService.getUser(1L));
 
         Assertions.assertEquals("User not found", exception.getMessage());
     }

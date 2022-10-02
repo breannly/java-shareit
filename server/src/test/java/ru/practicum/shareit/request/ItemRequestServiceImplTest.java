@@ -76,7 +76,7 @@ class ItemRequestServiceImplTest {
         Mockito.when(itemRequestRepository.findItemRequestsByRequestorId(Mockito.anyLong()))
                 .thenReturn(requests);
 
-        List<ItemRequestInfoDto> infoDto = itemRequestService.getRequestsByUser(1L);
+        List<ItemRequestInfoDto> infoDto = itemRequestService.getUserRequests(1L);
 
         Assertions.assertNotNull(infoDto);
         Assertions.assertEquals(1, infoDto.size());
@@ -89,7 +89,7 @@ class ItemRequestServiceImplTest {
 
         Exception exception = Assertions.assertThrows(
                 ObjectNotFoundException.class,
-                () -> itemRequestService.getRequestsByUser(1L)
+                () -> itemRequestService.getUserRequests(1L)
         );
         Assertions.assertEquals("User not found", exception.getMessage());
     }
@@ -105,7 +105,7 @@ class ItemRequestServiceImplTest {
         Mockito.when(itemRequestRepository.findById(request.getId()))
                 .thenReturn(Optional.of(request));
 
-        ItemRequestInfoDto infoDto = itemRequestService.getRequestById(user.getId(), request.getId());
+        ItemRequestInfoDto infoDto = itemRequestService.getRequest(user.getId(), request.getId());
         Assertions.assertNotNull(infoDto);
     }
 
@@ -119,7 +119,7 @@ class ItemRequestServiceImplTest {
 
         Exception exception = Assertions.assertThrows(
                 ObjectNotFoundException.class,
-                () -> itemRequestService.getRequestById(user.getId(), request.getId()));
+                () -> itemRequestService.getRequest(user.getId(), request.getId()));
 
         Assertions.assertEquals("User not found", exception.getMessage());
     }
@@ -137,7 +137,7 @@ class ItemRequestServiceImplTest {
 
         Exception exception = Assertions.assertThrows(
                 ObjectNotFoundException.class,
-                () -> itemRequestService.getRequestById(user.getId(), request.getId()));
+                () -> itemRequestService.getRequest(user.getId(), request.getId()));
 
         Assertions.assertEquals("Request not found", exception.getMessage());
     }
