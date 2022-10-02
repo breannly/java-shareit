@@ -15,20 +15,20 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
 
     @Override
-    public List<UserDto> getAll() {
+    public List<UserDto> getUsers() {
         return userRepository.findAll().stream()
                 .map(UserMapper::mapToUserDto)
                 .collect(toList());
     }
 
     @Override
-    public UserDto save(UserDto userDto) {
+    public UserDto saveUser(UserDto userDto) {
         User user = UserMapper.mapToUser(userDto);
         return UserMapper.mapToUserDto(userRepository.save(user));
     }
 
     @Override
-    public UserDto update(Long userId, UserDto userDto) {
+    public UserDto updateUser(Long userId, UserDto userDto) {
         User updatedUser = userRepository.findById(userId).orElseThrow(() ->
                 new ObjectNotFoundException("User not found"));
         fillUser(updatedUser, userDto);
@@ -47,14 +47,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDto getById(Long userId) {
+    public UserDto getUser(Long userId) {
         User user = userRepository.findById(userId).orElseThrow(() ->
                 new ObjectNotFoundException("User not found"));
         return UserMapper.mapToUserDto(user);
     }
 
     @Override
-    public void delete(Long userId) {
+    public void deleteUser(Long userId) {
         userRepository.deleteById(userId);
     }
 }

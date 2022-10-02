@@ -25,16 +25,16 @@ public class ItemController {
     private final ItemService itemService;
 
     @GetMapping
-    public List<ItemInfoDto> getAllById(@RequestHeader("X-Sharer-User-Id") Long userId,
-                                        @RequestParam(value = "from") int from,
-                                        @RequestParam(value = "size") int size) {
-        return itemService.getAllById(userId, from, size);
+    public List<ItemInfoDto> getItems(@RequestHeader("X-Sharer-User-Id") Long userId,
+                                      @RequestParam(value = "from") int from,
+                                      @RequestParam(value = "size") int size) {
+        return itemService.getItems(userId, from, size);
     }
 
     @PostMapping
-    public ItemDto save(@RequestHeader("X-Sharer-User-Id") Long userId,
-                        @RequestBody ItemDto itemDto) {
-        return itemService.save(userId, itemDto);
+    public ItemDto saveItem(@RequestHeader("X-Sharer-User-Id") Long userId,
+                            @RequestBody ItemDto itemDto) {
+        return itemService.saveItem(userId, itemDto);
     }
 
     @PostMapping("/{item_id}/comment")
@@ -45,23 +45,23 @@ public class ItemController {
     }
 
     @PatchMapping("/{item_id}")
-    public ItemDto update(@RequestHeader("X-Sharer-User-Id") Long userId,
-                          @PathVariable("item_id") Long itemId,
-                          @RequestBody ItemDto itemDto) {
-        return itemService.update(userId, itemId, itemDto);
+    public ItemDto updateItem(@RequestHeader("X-Sharer-User-Id") Long userId,
+                              @PathVariable("item_id") Long itemId,
+                              @RequestBody ItemDto itemDto) {
+        return itemService.updateItem(userId, itemId, itemDto);
     }
 
     @GetMapping("/{item_id}")
-    public ItemInfoDto getById(@RequestHeader("X-Sharer-User-Id") Long userId,
+    public ItemInfoDto getItem(@RequestHeader("X-Sharer-User-Id") Long userId,
                                @PathVariable("item_id") Long itemId) {
-        return itemService.getById(itemId, userId);
+        return itemService.getItem(itemId, userId);
     }
 
     @GetMapping("/search")
-    public List<ItemDto> search(@RequestHeader("X-Sharer-User-Id") Long userId,
-                                @RequestParam(name = "text", required = false) String text,
-                                @RequestParam(value = "from") int from,
-                                @RequestParam(value = "size") int size) {
-        return itemService.search(text, userId, from, size);
+    public List<ItemDto> searchItems(@RequestHeader("X-Sharer-User-Id") Long userId,
+                                     @RequestParam(name = "text", required = false) String text,
+                                     @RequestParam(value = "from") int from,
+                                     @RequestParam(value = "size") int size) {
+        return itemService.searchItems(text, userId, from, size);
     }
 }

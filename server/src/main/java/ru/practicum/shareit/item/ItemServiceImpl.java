@@ -36,7 +36,7 @@ public class ItemServiceImpl implements ItemService {
     private final ItemRequestRepository itemRequestRepository;
 
     @Override
-    public List<ItemInfoDto> getAllById(Long userId, int from, int size) {
+    public List<ItemInfoDto> getItems(Long userId, int from, int size) {
         Pageable pageable = PageRequest.of(from / size, size);
         return itemRepository.findAllById(userId, pageable)
                 .stream()
@@ -50,7 +50,7 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public ItemDto save(Long userId, ItemDto itemDto) {
+    public ItemDto saveItem(Long userId, ItemDto itemDto) {
         User user = userRepository.findById(userId).orElseThrow(()
                 -> new ObjectNotFoundException("User not found"));
         ItemRequest request = null;
@@ -76,7 +76,7 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public ItemDto update(Long userId, Long itemId, ItemDto itemDto) {
+    public ItemDto updateItem(Long userId, Long itemId, ItemDto itemDto) {
         userRepository.findById(userId).orElseThrow(()
                 -> new ObjectNotFoundException("User not found"));
         Item updatedItem = itemRepository.findById(itemId).orElseThrow(()
@@ -108,7 +108,7 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public ItemInfoDto getById(Long itemId, Long userId) {
+    public ItemInfoDto getItem(Long itemId, Long userId) {
         userRepository.findById(userId).orElseThrow(()
                 -> new ObjectNotFoundException("User not found"));
         Item item = itemRepository.findById(itemId).orElseThrow(()
@@ -120,7 +120,7 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public List<ItemDto> search(String text, Long userId, int from, int size) {
+    public List<ItemDto> searchItems(String text, Long userId, int from, int size) {
         userRepository.findById(userId).orElseThrow(()
                 -> new ObjectNotFoundException("User not found"));
         Pageable pageable = PageRequest.of(from / size, size);

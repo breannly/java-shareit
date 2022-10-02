@@ -28,14 +28,11 @@ public class BookingServiceImpl implements BookingService {
     private final BookingRepository bookingRepository;
 
     @Override
-    public BookingDto booking(BookingDto bookingDto, Long userId) {
+    public BookingDto bookItem(BookingDto bookingDto, Long userId) {
         User user = userRepository.findById(userId).orElseThrow(()
                 -> new ObjectNotFoundException("User doesn't exists"));
         Item item = itemRepository.findById(bookingDto.getItemId()).orElseThrow(()
                 -> new ObjectNotFoundException("Item doesn't exists"));
-        if (bookingDto.getStart().isAfter(bookingDto.getEnd())) {
-            throw new ValidationException("Validation Failed");
-        }
         if (item.getAvailable().equals(false)) {
             throw new ValidationException("Validation Failed");
         }
@@ -47,7 +44,7 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public BookingInfoDto approve(Long userId, Long bookingId, Boolean approved) {
+    public BookingInfoDto approveBooking(Long userId, Long bookingId, Boolean approved) {
         Booking booking = bookingRepository.findById(bookingId).orElseThrow(()
                 -> new ObjectNotFoundException("Booking not found"));
         User user = userRepository.findById(userId).orElseThrow(()
@@ -72,7 +69,7 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public BookingInfoDto getById(Long userId, Long bookingId) {
+    public BookingInfoDto getBooking(Long userId, Long bookingId) {
         Booking booking = bookingRepository.findById(bookingId).orElseThrow(()
                 -> new ObjectNotFoundException("Booking info not found"));
         User user = userRepository.findById(booking.getBooker().getId()).orElseThrow(()
@@ -87,7 +84,7 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public List<BookingInfoDto> getBookingBookerByState(Long userId, BookingState state, int from, int size) {
+    public List<BookingInfoDto> getBookings(Long userId, BookingState state, int from, int size) {
         userRepository.findById(userId).orElseThrow(()
                 -> new ObjectNotFoundException("User doesn't exists"));
         Pageable pageable = PageRequest.of(from / size, size);
@@ -127,7 +124,7 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public List<BookingInfoDto> getBookingOwnerByState(Long userId, BookingState state, int from, int size) {
+    public List<BookingInfoDto> getOwnerBookings(Long userId, BookingState state, int from, int size) {
         userRepository.findById(userId).orElseThrow(()
                 -> new ObjectNotFoundException("User doesn't exists"));
         Pageable pageable = PageRequest.of(from / size, size);

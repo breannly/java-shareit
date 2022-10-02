@@ -29,7 +29,7 @@ public class ItemRequestServiceImpl implements ItemRequestService {
     }
 
     @Override
-    public List<ItemRequestInfoDto> getRequestsByUser(Long userId) {
+    public List<ItemRequestInfoDto> getUserRequests(Long userId) {
         userRepository.findById(userId).orElseThrow(()
                 -> new ObjectNotFoundException("User not found"));
         return itemRequestRepository.findItemRequestsByRequestorId(userId)
@@ -50,7 +50,7 @@ public class ItemRequestServiceImpl implements ItemRequestService {
     }
 
     @Override
-    public ItemRequestInfoDto getRequestById(Long userId, Long requestId) {
+    public ItemRequestInfoDto getRequest(Long userId, Long requestId) {
         userRepository.findById(userId).orElseThrow(()
                 -> new ObjectNotFoundException("User not found"));
         ItemRequest request = itemRequestRepository.findById(requestId).orElseThrow(()

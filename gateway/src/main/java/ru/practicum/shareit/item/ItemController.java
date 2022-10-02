@@ -34,12 +34,14 @@ public class ItemController {
     public ResponseEntity<Object> getItems(@RequestHeader("X-Sharer-User-Id") Long userId,
                                            @PositiveOrZero @RequestParam(value = "from", defaultValue = "0") int from,
                                            @Positive @RequestParam(value = "size", defaultValue = "10") int size) {
+        log.info("Get items with userId={}, from={}, size={}", userId, from, size);
         return itemClient.getItems(userId, from, size);
     }
 
     @PostMapping
     public ResponseEntity<Object> saveItem(@RequestHeader("X-Sharer-User-Id") Long userId,
                                            @Validated({Create.class}) @RequestBody ItemDto itemDto) {
+        log.info("Creating item {}, userId={}", itemDto, userId);
         return itemClient.saveItem(userId, itemDto);
     }
 
@@ -47,6 +49,7 @@ public class ItemController {
     public ResponseEntity<Object> saveComment(@RequestHeader("X-Sharer-User-Id") Long userId,
                                               @Valid @RequestBody CommentDto commentDto,
                                               @PathVariable("item_id") Long itemId) {
+        log.info("Creating item's comment {}, userId={}, itemId={}", commentDto, userId, itemId);
         return itemClient.saveComment(userId, itemId, commentDto);
     }
 
@@ -54,12 +57,14 @@ public class ItemController {
     public ResponseEntity<Object> updateItem(@RequestHeader("X-Sharer-User-Id") Long userId,
                                              @PathVariable("item_id") Long itemId,
                                              @RequestBody ItemDto itemDto) {
+        log.info("Updating item {}, userId={}, itemId={}", itemDto, userId, itemId);
         return itemClient.updateItem(userId, itemId, itemDto);
     }
 
     @GetMapping("/{item_id}")
     public ResponseEntity<Object> getItem(@RequestHeader("X-Sharer-User-Id") Long userId,
                                           @PathVariable("item_id") Long itemId) {
+        log.info("Get item {} userId={}", itemId, userId);
         return itemClient.getItem(userId, itemId);
     }
 
@@ -70,6 +75,7 @@ public class ItemController {
                                               @RequestParam(value = "from", defaultValue = "0") int from,
                                               @Positive
                                               @RequestParam(value = "size", defaultValue = "10") int size) {
+        log.info("Get items with text={}, userId={}, from={}, size={}", text, userId, from, size);
         return itemClient.searchItems(userId, text, from, size);
     }
 }
